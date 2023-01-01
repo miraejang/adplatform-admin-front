@@ -67,7 +67,7 @@ type CampaignsContent = {
   video_views: number;
   vtr: number;
 };
-type Campaigns = {
+interface ICampaigns {
   content: CampaignsContent[];
   total_elements: number;
   total_pages: number;
@@ -77,7 +77,7 @@ type Campaigns = {
   number_of_elements: number;
   first: boolean;
   empty: boolean;
-};
+}
 
 const Row = styled.div`
   display: flex;
@@ -123,6 +123,13 @@ const Campaigns = () => {
   const viewer = useRecoilValue(viewerMode);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  const onStatusChange = (id: number) => {
+    sampleData.content.map((campaign) => {
+      if (campaign.id === id) {
+        campaign.enabled = !campaign.enabled;
+      }
+    });
+  };
   const pageHandler = (page: number) => {
     setCurrentPage(page);
   };
@@ -155,6 +162,7 @@ const Campaigns = () => {
                 <div className="status fit">
                   <label htmlFor="status">
                     <input
+                      onChange={() => onStatusChange(campaign.id)}
                       type="checkbox"
                       name="status"
                       id="status"
