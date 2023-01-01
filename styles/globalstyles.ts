@@ -44,6 +44,10 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.txtGray};
     border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   }
+  h2 {    
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.txt};
+  }
 `;
 
 export default GlobalStyle;

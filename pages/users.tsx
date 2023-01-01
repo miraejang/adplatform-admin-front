@@ -1,5 +1,8 @@
+import { useState } from "react";
 import styled from "styled-components";
+import CreateUserForm from "../components/createUserForm";
 import Pagination from "../components/pagination";
+import { BlueBtn } from "../styles/buttons";
 
 const data = {
   content: [
@@ -58,6 +61,14 @@ const Head = styled.div`
 const Body = styled.div``;
 
 const Users = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const modalHandler = () => {
+    setOpenModal(true);
+  };
+  const closeHanlder = () => {
+    setOpenModal(false);
+  };
+
   const dateFormat = (str: string) => {
     const date = new Date(str);
     const dateString = date
@@ -68,12 +79,8 @@ const Users = () => {
     return `${dateString} ${timeString}`;
   };
 
-  const BtnUserCreat = styled.button`
-    padding: 0.5rem;
+  const BtnUserCreat = styled(BlueBtn)`
     margin: 1rem 2rem 1.5rem;
-    border-radius: 0.5rem;
-    background-color: ${({ theme }) => theme.colors.pointBlue};
-    color: #fff;
   `;
   const BtnUserEdit = styled.button`
     padding: 0;
@@ -84,7 +91,7 @@ const Users = () => {
   return (
     <>
       <h1>사용자 관리</h1>
-      <BtnUserCreat>생성</BtnUserCreat>
+      <BtnUserCreat onClick={modalHandler}>생성</BtnUserCreat>
       <Table>
         <Head>
           <Row>
@@ -108,6 +115,7 @@ const Users = () => {
         </Body>
       </Table>
       <Pagination />
+      {openModal && <CreateUserForm onClose={closeHanlder} />}
     </>
   );
 };
