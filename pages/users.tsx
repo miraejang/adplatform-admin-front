@@ -1,8 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import CreateUserForm from "../components/createUserForm";
+import EditUserForm from "../components/editUserForm";
 import Pagination from "../components/pagination";
+import viewerMode from "../components/states";
 import { BlueBtn } from "../styles/buttons";
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  last_login_at: string;
+};
 
 const data = {
   content: [
@@ -59,14 +68,32 @@ const Head = styled.div`
   }
 `;
 const Body = styled.div``;
+const BtnUserCreat = styled(BlueBtn)`
+  margin: 1rem 2rem 1.5rem;
+`;
+const BtnUserEdit = styled.button`
+  padding: 0;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.pointBlue};
+`;
 
 const Users = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const modalHandler = () => {
-    setOpenModal(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [openCreate, setOpenCreate] = useState(false);
+  const [editUser, setEditUser] = useState<User | null>(null);
+
+  const pageHandler = (page: number) => {
+    setCurrentPage(page);
+  };
+  const editHandler = (data: User) => {
+    setEditUser(data);
+  };
+  const createHandler = () => {
+    setOpenCreate(true);
   };
   const closeHanlder = () => {
-    setOpenModal(false);
+    setEditUser(null);
+    setOpenCreate(false);
   };
 
   const dateFormat = (str: string) => {
@@ -79,19 +106,10 @@ const Users = () => {
     return `${dateString} ${timeString}`;
   };
 
-  const BtnUserCreat = styled(BlueBtn)`
-    margin: 1rem 2rem 1.5rem;
-  `;
-  const BtnUserEdit = styled.button`
-    padding: 0;
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.pointBlue};
-  `;
-
   return (
     <>
       <h1>사용자 관리</h1>
-      <BtnUserCreat onClick={modalHandler}>생성</BtnUserCreat>
+      <BtnUserCreat onClick={createHandler}>생성</BtnUserCreat>
       <Table>
         <Head>
           <Row>
@@ -108,14 +126,22 @@ const Users = () => {
               <div className="name">{user.name}</div>
               <div className="last_login">{dateFormat(user.last_login_at)}</div>
               <div className="edit fit">
-                <BtnUserEdit>수정</BtnUserEdit>
+                <BtnUserEdit onClick={() => editHandler(user)}>
+                  수정
+                </BtnUserEdit>
               </div>
             </Row>
           ))}
         </Body>
       </Table>
-      <Pagination />
-      {openModal && <CreateUserForm onClose={closeHanlder} />}
+
+      <Pagination
+        total={data.total_pages}
+        current={currentPage}
+        changeCurrent={pageHandler}
+      />
+      {openCreate && <CreateUserForm onClose={closeHanlder} />}
+      {editUser && <EditUserForm userData={editUser} onClose={closeHanlder} />}
     </>
   );
 };

@@ -1,5 +1,8 @@
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Pagination from "../components/pagination";
+import viewerMode from "../components/states";
 
 interface Company {
   id: Number;
@@ -53,15 +56,17 @@ const data = {
   total_pages: 1,
 };
 
-interface Objective {
-  WEBSITE_CONVERSIONS: string;
-  WEBSITE_TRAFFIC: string;
-  SALES: string;
-  APP_INSTALLATION: string;
-  LEAD: string;
-  BRAND: string;
-  VIDEO_VIEWS: string;
-}
+type ObjectiveType =
+  | "WEBSITE_CONVERSIONS"
+  | "WEBSITE_TRAFFIC"
+  | "SALES"
+  | "APP_INSTALLATION"
+  | "LEAD"
+  | "BRAND"
+  | "VIDEO_VIEWS";
+type Objective = {
+  [key in ObjectiveType]: string;
+};
 type CampaignsContent = {
   id: number;
   name: string;
@@ -115,15 +120,22 @@ const Head = styled.div`
 `;
 const Body = styled.div``;
 
+const objective: Objective = {
+  WEBSITE_CONVERSIONS: "웹사이트 전환",
+  WEBSITE_TRAFFIC: "웹사이트 트래픽",
+  SALES: "판매",
+  APP_INSTALLATION: "앱설치",
+  LEAD: "리드",
+  BRAND: "브랜드 인지도 및 도달 범위",
+  VIDEO_VIEWS: "동영상 조회",
+};
+
 const Campaigns = () => {
-  const objective: Objective = {
-    WEBSITE_CONVERSIONS: "웹사이트 전환",
-    WEBSITE_TRAFFIC: "웹사이트 트래픽",
-    SALES: "판매",
-    APP_INSTALLATION: "앱설치",
-    LEAD: "리드",
-    BRAND: "브랜드 인지도 및 도달 범위",
-    VIDEO_VIEWS: "동영상 조회",
+  const viewer = useRecoilValue(viewerMode);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const pageHandler = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -133,6 +145,7 @@ const Campaigns = () => {
         <Head>
           <Row>
             <div className="status fit">상태</div>
+            <div className="id">아이디</div>
             <div className="name">캠페인명</div>
             <div className="objective">캠페인 목적</div>
             <div className="impressions right">노출수</div>
@@ -143,42 +156,50 @@ const Campaigns = () => {
           </Row>
         </Head>
         <Body>
-          {data.content.map((campaign) => (
-            <Row key={campaign.id}>
-              <div className="status fit">
-                <label htmlFor="status">
-                  <input
-                    type="checkbox"
-                    name="status"
-                    id="status"
-                    checked={campaign.enabled}
-                  />
-                </label>
-              </div>
-              <div className="name">{campaign.name}</div>
-              <div className="objective">
-                {objective[campaign.campaign_objective as keyof Objective]}
-              </div>
-              <div className="impressions right">
-                {campaign.impressions.toLocaleString()}
-              </div>
-              <div className="clicks right">
-                {campaign.clicks.toLocaleString()}
-              </div>
-              <div className="ctr right">{`${(
-                +campaign.ctr.toFixed(2) * 100
-              ).toLocaleString()}%`}</div>
-              <div className="video_views right">
-                {campaign.video_views.toLocaleString()}
-              </div>
-              <div className="vtr right">{`${(
-                +campaign.vtr.toFixed(2) * 100
-              ).toLocaleString()}%`}</div>
-            </Row>
-          ))}
+          {data.content
+            .slice(data.size * (currentPage - 1), data.size * currentPage)
+            .map((campaign) => (
+              <Row key={campaign.id}>
+                <div className="status fit">
+                  <label htmlFor="status">
+                    <input
+                      type="checkbox"
+                      name="status"
+                      id="status"
+                      checked={campaign.enabled}
+                      disabled={viewer === "viewer"}
+                    />
+                  </label>
+                </div>
+                <div className="name">{campaign.id}</div>
+                <div className="name">{campaign.name}</div>
+                <div className="objective">
+                  {objective[campaign.campaign_objective as ObjectiveType]}
+                </div>
+                <div className="impressions right">
+                  {campaign.impressions.toLocaleString()}
+                </div>
+                <div className="clicks right">
+                  {campaign.clicks.toLocaleString()}
+                </div>
+                <div className="ctr right">{`${(
+                  +campaign.ctr.toFixed(2) * 100
+                ).toLocaleString()}%`}</div>
+                <div className="video_views right">
+                  {campaign.video_views.toLocaleString()}
+                </div>
+                <div className="vtr right">{`${(
+                  +campaign.vtr.toFixed(2) * 100
+                ).toLocaleString()}%`}</div>
+              </Row>
+            ))}
         </Body>
       </Table>
-      <Pagination />
+      <Pagination
+        total={data.total_pages}
+        current={currentPage}
+        changeCurrent={pageHandler}
+      />
     </>
   );
 };

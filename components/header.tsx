@@ -1,7 +1,19 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import viewerMode from "./states";
+
+const data = {
+  id: 1,
+  email: "abc@abc.com",
+  name: "홍길동",
+  company: {
+    id: 1,
+    name: "와이즈버즈",
+  },
+};
 
 const HEADER = styled.header`
   display: flex;
@@ -95,6 +107,10 @@ const ViewerMode = styled.div`
 const Header = () => {
   const router = useRouter();
   const [userInfoOpen, setUserInfoOpen] = useState(false);
+  const [viewer, setViewer] = useRecoilState(viewerMode);
+  const viewerModeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setViewer(event.target.value);
+  };
 
   useEffect(() => {
     setUserInfoOpen(false);
@@ -116,14 +132,16 @@ const Header = () => {
                 캠페인
               </Link>
             </li>
-            <li>
-              <Link
-                className={router.pathname === "/users" ? "active" : ""}
-                href="/users"
-              >
-                사용자
-              </Link>
-            </li>
+            {viewer === "admin" && (
+              <li>
+                <Link
+                  className={router.pathname === "/users" ? "active" : ""}
+                  href="/users"
+                >
+                  사용자
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </NavBox>
@@ -133,17 +151,23 @@ const Header = () => {
             className={userInfoOpen ? "active" : ""}
             onClick={() => setUserInfoOpen(!userInfoOpen)}
           >
-            abc@abc.com
+            {data.email}
           </button>
           <div className={userInfoOpen ? "open" : ""}>
-            <div className="name">홍길동</div>
-            <div className="email">abc@abc.com</div>
-            <div className="company">와이즈버즈</div>
+            <div className="name">{data.name}</div>
+            <div className="email">{data.email}</div>
+            <div className="company">{data.company.name}</div>
           </div>
         </User>
         <ViewerMode>
           <div>
-            <select name="viwer_mode" id="viwer_mode">
+            <select
+              onChange={viewerModeHandler}
+              disabled={router.pathname === "/users"}
+              defaultValue={viewer}
+              name="viwer_mode"
+              id="viwer_mode"
+            >
               <option value="admin">어드민</option>
               <option value="manager">매니저</option>
               <option value="viewer">뷰어</option>

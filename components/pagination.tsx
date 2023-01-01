@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const PAGINATION = styled.div`
@@ -64,34 +65,71 @@ const Pages = styled.ul`
     color: #348efc;
   }
 `;
+interface IPagination {
+  total: number;
+  current: number;
+  showCount?: number;
+  changeCurrent: (page: number) => void;
+}
 
-const Pagination = () => {
+const Pagination = ({
+  total,
+  current,
+  showCount = 5,
+  changeCurrent,
+}: IPagination) => {
+  const [currentPages, setCurrentPages] = useState<number[]>([]);
+
+  useEffect(() => {
+    let start = 1;
+    let end = total;
+    let front = Math.floor((showCount - 1) / 2);
+    let back = Math.ceil((showCount - 1) / 2);
+    const arr = [];
+
+    if (total > showCount) {
+      if (current - front > 1) {
+        if (current + back > total) {
+          start = total - (showCount - 1);
+        } else {
+          start = current - front;
+          end = current + back;
+        }
+      } else {
+        end = showCount;
+      }
+    }
+
+    for (let i = start; i <= end; i++) {
+      arr.push(i);
+    }
+
+    setCurrentPages(arr);
+  }, [current]);
+
+  const onClick = (page: number) => {
+    changeCurrent(page < 1 ? 1 : page > total ? total : page);
+  };
+
   return (
     <PAGINATION>
-      <First>
+      <First onClick={() => onClick(1)}>
         <p>첫 페이지</p>
       </First>
-      <Prev>
+      <Prev onClick={() => onClick(current - 1)}>
         <p>이전 페이지</p>
       </Prev>
       <Pages>
-        <li className="active">
-          <Btn>1</Btn>
-        </li>
-        <li>
-          <Btn>2</Btn>
-        </li>
-        <li>
-          <Btn>3</Btn>
-        </li>
-        <li>
-          <Btn>4</Btn>
-        </li>
+        {currentPages.map((page) => (
+          <li className={page === current ? "active" : ""}>
+            <Btn onClick={() => onClick(page)}>{page}</Btn>
+          </li>
+        ))}
       </Pages>
-      <Next>
+      <Next onClick={() => onClick(current + 1)}>
         <p>다음 페이지</p>
       </Next>
-      <Last>
+      <Last onClick={() => onClick(total)}>
         <p>마지막 페이지</p>
       </Last>
     </PAGINATION>
