@@ -121,7 +121,7 @@ const Pagination = ({
       </Prev>
       <Pages>
         {currentPages.map((page) => (
-          <li className={page === current ? "active" : ""}>
+          <li className={page === current ? "active" : ""} key={page}>
             <Btn onClick={() => onClick(page)}>{page}</Btn>
           </li>
         ))}
