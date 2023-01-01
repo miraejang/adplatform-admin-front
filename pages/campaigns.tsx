@@ -4,18 +4,7 @@ import styled from "styled-components";
 import Pagination from "../components/pagination";
 import viewerMode from "../components/states";
 
-interface Company {
-  id: Number;
-  name: String;
-}
-interface User {
-  id: Number;
-  email: String;
-  name: String;
-  company: Company;
-}
-
-const data = {
+const sampleData = {
   content: [
     {
       id: 1,
@@ -156,8 +145,11 @@ const Campaigns = () => {
           </Row>
         </Head>
         <Body>
-          {data.content
-            .slice(data.size * (currentPage - 1), data.size * currentPage)
+          {sampleData.content
+            .slice(
+              sampleData.size * (currentPage - 1),
+              sampleData.size * currentPage
+            )
             .map((campaign) => (
               <Row key={campaign.id}>
                 <div className="status fit">
@@ -196,7 +188,7 @@ const Campaigns = () => {
         </Body>
       </Table>
       <Pagination
-        total={data.total_pages}
+        total={sampleData.total_pages}
         current={currentPage}
         changeCurrent={pageHandler}
       />

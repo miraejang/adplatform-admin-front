@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import viewerMode from "./states";
 
-const data = {
+const sampleData = {
   id: 1,
   email: "abc@abc.com",
   name: "홍길동",
@@ -151,12 +151,12 @@ const Header = () => {
             className={userInfoOpen ? "active" : ""}
             onClick={() => setUserInfoOpen(!userInfoOpen)}
           >
-            {data.email}
+            {sampleData.email}
           </button>
           <div className={userInfoOpen ? "open" : ""}>
-            <div className="name">{data.name}</div>
-            <div className="email">{data.email}</div>
-            <div className="company">{data.company.name}</div>
+            <div className="name">{sampleData.name}</div>
+            <div className="email">{sampleData.email}</div>
+            <div className="company">{sampleData.company.name}</div>
           </div>
         </User>
         <ViewerMode>

@@ -6,14 +6,7 @@ import Pagination from "../components/pagination";
 import viewerMode from "../components/states";
 import { BlueBtn } from "../styles/buttons";
 
-type User = {
-  id: number;
-  email: string;
-  name: string;
-  last_login_at: string;
-};
-
-const data = {
+const sampleData = {
   content: [
     {
       id: 1,
@@ -37,6 +30,13 @@ const data = {
   size: 25,
   total_elements: 2,
   total_pages: 1,
+};
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  last_login_at: string;
 };
 
 const Row = styled.div`
@@ -85,8 +85,8 @@ const Users = () => {
   const pageHandler = (page: number) => {
     setCurrentPage(page);
   };
-  const editHandler = (data: User) => {
-    setEditUser(data);
+  const editHandler = (sampleData: User) => {
+    setEditUser(sampleData);
   };
   const createHandler = () => {
     setOpenCreate(true);
@@ -120,7 +120,7 @@ const Users = () => {
           </Row>
         </Head>
         <Body>
-          {data.content.map((user) => (
+          {sampleData.content.map((user) => (
             <Row key={user.id}>
               <div className="id">{user.email}</div>
               <div className="name">{user.name}</div>
@@ -136,7 +136,7 @@ const Users = () => {
       </Table>
 
       <Pagination
-        total={data.total_pages}
+        total={sampleData.total_pages}
         current={currentPage}
         changeCurrent={pageHandler}
       />
