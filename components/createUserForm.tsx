@@ -4,6 +4,32 @@ import styled from "styled-components";
 import { BlueBtn, GrayBtn } from "../styles/buttons";
 import Modal from "./modal";
 
+const sampleData = {
+  content: [
+    {
+      id: 1,
+      email: "user1@wisebirds.ai",
+      name: "사용자1",
+      last_login_at: "2022-11-14T07:37:24.914Z",
+    },
+    {
+      id: 2,
+      email: "user2@wisebirds.ai",
+      name: "사용자2",
+      last_login_at: "2022-11-14T07:37:24.914Z",
+    },
+    {
+      id: 3,
+      email: "user3@wisebirds.ai",
+      name: "사용자3",
+      last_login_at: "2022-11-14T07:37:24.914Z",
+    },
+  ],
+  size: 25,
+  total_elements: 2,
+  total_pages: 1,
+};
+
 interface Iprops {
   onClose: () => void;
 }
@@ -59,7 +85,11 @@ const CreateUserForm = (props: Iprops) => {
                 value: 50,
                 message: "올바른 이메일 주소를 입력하세요.",
               },
-              // validate
+              validate: {
+                idCheck: (value) =>
+                  !sampleData.content.find((user) => value === user.email) ||
+                  "이미 사용중인 이메일입니다. 다른 이메일을 입력하세요",
+              },
             })}
             type="email"
             name="id"
