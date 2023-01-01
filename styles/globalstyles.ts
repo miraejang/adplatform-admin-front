@@ -39,6 +39,11 @@ const GlobalStyle = createGlobalStyle`
   li {
     list-style: none;
   }
+  h1 {
+    padding: 2rem;
+    color: ${({ theme }) => theme.colors.txtGray};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  }
 `;
 
 export default GlobalStyle;
