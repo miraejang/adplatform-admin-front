@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Pagination from "../components/pagination";
 
 const data = {
   content: [
@@ -106,6 +107,7 @@ const Users = () => {
           ))}
         </Body>
       </Table>
+      <Pagination />
     </>
   );
 };

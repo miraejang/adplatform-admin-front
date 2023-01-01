@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Pagination from "../components/pagination";
 
 interface Company {
   id: Number;
@@ -177,6 +178,7 @@ const Campaigns = () => {
           ))}
         </Body>
       </Table>
+      <Pagination />
     </>
   );
 };
