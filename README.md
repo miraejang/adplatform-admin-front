@@ -1,6 +1,7 @@
 # Adplatform Admin Front
 
 소요시간 약 50시간
+　   
 
 ## API
 
@@ -13,6 +14,9 @@ rewrites() {
   ]
 }
 ```
+### Sampel Data
+API를 이용하지 않은 직접 data를 변수로 넣은 작업 파일은 sample-data 브랜치에서 확인하실 수 있습니다.  
+　   
 
 ## localhost
 
