@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BlueBtn, GrayBtn } from "../styles/buttons";
 import {
@@ -8,7 +8,6 @@ import {
   MaskingBtn,
   BtnBox,
   ErorrMessage,
-  Icon,
 } from "../styles/form";
 import { HideIcon, ShowIcon } from "../styles/icons";
 import Modal from "./modal";
@@ -91,9 +90,15 @@ const CreateUserForm = ({ onClose }: Iprops) => {
                 message: "올바른 이메일 주소를 입력하세요.",
               },
               validate: {
-                idCheck: (value) =>
-                  !sampleData.content.find((user) => value === user.email) ||
-                  "이미 사용중인 이메일입니다. 다른 이메일을 입력하세요",
+                idCheck: async (value) => {
+                  const exists = await fetch(`/api/users/${value}/exists`)
+                    .then((res) => res.json())
+                    .then((data) => data.result);
+                  return (
+                    exists ||
+                    "이미 사용중인 이메일입니다. 다른 이메일을 입력하세요"
+                  );
+                },
               },
             })}
             type="email"

@@ -3,18 +3,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { resourceLimits } from "worker_threads";
 import { UserIcon } from "../styles/icons";
 import viewerMode from "./states";
-
-const sampleData = {
-  id: 1,
-  email: "abc@abc.com",
-  name: "홍길동",
-  company: {
-    id: 1,
-    name: "와이즈버즈",
-  },
-};
 
 const HEADER = styled.header`
   display: flex;
@@ -114,11 +105,19 @@ const ViewerMode = styled.div`
 
 const Header = () => {
   const router = useRouter();
+  const [user, setUser] = useState();
   const [userInfoOpen, setUserInfoOpen] = useState(false);
   const [viewer, setViewer] = useRecoilState(viewerMode);
   const viewerModeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setViewer(event.target.value);
   };
+
+  useEffect(() => {
+    (async () => {
+      const results = await (await fetch(`/api/auth/me`)).json();
+      setUser(results);
+    })();
+  }, []);
 
   useEffect(() => {
     setUserInfoOpen(false);
@@ -160,12 +159,12 @@ const Header = () => {
             onClick={() => setUserInfoOpen(!userInfoOpen)}
           >
             <UserIcon />
-            {sampleData.email}
+            {user.email}
           </button>
           <div className={userInfoOpen ? "open" : ""}>
-            <div className="name">{sampleData.name}</div>
-            <div className="email">{sampleData.email}</div>
-            <div className="company">{sampleData.company.name}</div>
+            <div className="name">{user.name}</div>
+            <div className="email">{user.email}</div>
+            <div className="company">{user.company.name}</div>
           </div>
         </User>
         <ViewerMode>

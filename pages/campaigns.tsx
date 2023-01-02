@@ -5,47 +5,6 @@ import Pagination from "../components/pagination";
 import viewerMode from "../components/states";
 import { Body, Head, Row, Table } from "../styles/table";
 
-const sampleData = {
-  content: [
-    {
-      id: 1,
-      name: "캠페인1",
-      enabled: true,
-      campaign_objective: "WEBSITE_TRAFFIC",
-      impressions: 384057,
-      clicks: 1974,
-      ctr: 0.8752,
-      video_views: 948,
-      vtr: 0.95123,
-    },
-    {
-      id: 2,
-      name: "캠페인2",
-      enabled: true,
-      campaign_objective: "LEAD",
-      impressions: 705575,
-      clicks: 6726,
-      ctr: 0.8733,
-      video_views: 40,
-      vtr: 0.135,
-    },
-    {
-      id: 3,
-      name: "캠페인3",
-      enabled: true,
-      campaign_objective: "LEAD",
-      impressions: 538086,
-      clicks: 1171,
-      ctr: 0.3833,
-      video_views: 512,
-      vtr: 0.2512,
-    },
-  ],
-  size: 25,
-  total_elements: 2,
-  total_pages: 1,
-};
-
 type ObjectiveType =
   | "WEBSITE_CONVERSIONS"
   | "WEBSITE_TRAFFIC"
@@ -134,12 +93,12 @@ const objective: Objective = {
   VIDEO_VIEWS: "동영상 조회",
 };
 
-const Campaigns = () => {
+const Campaigns = ({ results }: ICampaigns) => {
   const viewer = useRecoilValue(viewerMode);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const onStatusChange = (id: number) => {
-    sampleData.content.map((campaign) => {
+    results.content.map((campaign: CampaignsContent) => {
       if (campaign.id === id) {
         campaign.enabled = !campaign.enabled;
       }
@@ -168,12 +127,9 @@ const Campaigns = () => {
           </Row>
         </Head>
         <Body>
-          {sampleData.content
-            .slice(
-              sampleData.size * (currentPage - 1),
-              sampleData.size * currentPage
-            )
-            .map((campaign) => (
+          {results.content
+            .slice(results.size * (currentPage - 1), results.size * currentPage)
+            .map((campaign: CampaignsContent) => (
               <Row key={campaign.id}>
                 <div className="status">
                   <ToggleBox>
@@ -213,7 +169,7 @@ const Campaigns = () => {
         </Body>
       </Table>
       <Pagination
-        total={sampleData.total_pages}
+        total={results.total_pages}
         current={currentPage}
         changeCurrent={pageHandler}
       />
@@ -222,3 +178,13 @@ const Campaigns = () => {
 };
 
 export default Campaigns;
+
+export async function getServerSideProps() {
+  const results = await (
+    await fetch(`http://localhost:3000/api/campaigns`)
+  ).json();
+
+  return {
+    props: { results },
+  };
+}

@@ -6,38 +6,24 @@ import Pagination from "../components/pagination";
 import { BlueBtn } from "../styles/buttons";
 import { Body, Head, Row, Table } from "../styles/table";
 
-const sampleData = {
-  content: [
-    {
-      id: 1,
-      email: "user1@wisebirds.ai",
-      name: "사용자1",
-      last_login_at: "2022-11-14T07:37:24.914Z",
-    },
-    {
-      id: 2,
-      email: "user2@wisebirds.ai",
-      name: "사용자2",
-      last_login_at: "2022-11-14T07:37:24.914Z",
-    },
-    {
-      id: 3,
-      email: "user3@wisebirds.ai",
-      name: "사용자3",
-      last_login_at: "2022-11-14T07:37:24.914Z",
-    },
-  ],
-  size: 25,
-  total_elements: 2,
-  total_pages: 1,
-};
-
 type User = {
   id: number;
   email: string;
   name: string;
   last_login_at: string;
 };
+interface IUsers {
+  content: User[];
+  total_elements: number;
+  total_pages: number;
+  last: boolean;
+  number: number;
+  size: number;
+  sort: object;
+  number_of_elements: number;
+  first: boolean;
+  empty: boolean;
+}
 
 const BtnUserCreat = styled(BlueBtn)`
   margin: 1rem 2rem 1.5rem;
@@ -48,7 +34,7 @@ const BtnUserEdit = styled.button`
   color: ${({ theme }) => theme.colors.pointBlue};
 `;
 
-const Users = () => {
+const Users = ({ results }: IUsers) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [openCreate, setOpenCreate] = useState(false);
   const [editUser, setEditUser] = useState<User | null>(null);
@@ -56,8 +42,8 @@ const Users = () => {
   const pageHandler = (page: number) => {
     setCurrentPage(page);
   };
-  const editHandler = (sampleData: User) => {
-    setEditUser(sampleData);
+  const editHandler = (results: User) => {
+    setEditUser(results);
   };
   const createHandler = () => {
     setOpenCreate(true);
@@ -91,7 +77,7 @@ const Users = () => {
           </Row>
         </Head>
         <Body>
-          {sampleData.content.map((user) => (
+          {results.content.map((user: User) => (
             <Row key={user.id}>
               <div className="id">{user.email}</div>
               <div className="name">{user.name}</div>
@@ -106,7 +92,7 @@ const Users = () => {
         </Body>
       </Table>
       <Pagination
-        total={sampleData.total_pages}
+        total={results.total_pages}
         current={currentPage}
         changeCurrent={pageHandler}
       />
@@ -117,3 +103,11 @@ const Users = () => {
 };
 
 export default Users;
+
+export async function getServerSideProps() {
+  const results = await (await fetch(`http://localhost:3000/api/users`)).json();
+
+  return {
+    props: { results },
+  };
+}
