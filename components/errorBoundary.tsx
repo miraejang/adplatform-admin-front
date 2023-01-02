@@ -15,6 +15,10 @@ const Container = styled.div`
     margin-bottom: 2rem;
   }
 `;
+const BtnBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {
@@ -44,9 +48,11 @@ class ErrorBoundary extends Component<Props, State> {
               ⁕ 고객센터
               <br />- email: helpdesk@wisebirds.ai
             </p>
-            <BlueBtn onClick={() => this.setState({ hasError: false })}>
-              확인
-            </BlueBtn>
+            <BtnBox>
+              <BlueBtn onClick={() => this.setState({ hasError: false })}>
+                확인
+              </BlueBtn>
+            </BtnBox>
           </Container>
         </Modal>
       );

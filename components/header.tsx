@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { UserIcon } from "../styles/icons";
 import viewerMode from "./states";
 
 const sampleData = {
@@ -60,8 +61,15 @@ const User = styled.div`
   position: relative;
 
   button {
+    display: flex;
+    align-items: center;
     height: ${({ theme }) => theme.heights.header};
     padding: 0 1rem;
+
+    span {
+      height: 1.8rem;
+      margin-right: 0.2rem;
+    }
 
     &:hover,
     &.active {
@@ -151,6 +159,7 @@ const Header = () => {
             className={userInfoOpen ? "active" : ""}
             onClick={() => setUserInfoOpen(!userInfoOpen)}
           >
+            <UserIcon />
             {sampleData.email}
           </button>
           <div className={userInfoOpen ? "open" : ""}>
