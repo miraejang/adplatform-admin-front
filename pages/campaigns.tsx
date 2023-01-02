@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Pagination from "../components/pagination";
 import viewerMode from "../components/states";
+import { Body, Head, Row, Table } from "../styles/table";
 
 const sampleData = {
   content: [
@@ -79,35 +80,49 @@ interface ICampaigns {
   empty: boolean;
 }
 
-const Row = styled.div`
-  display: flex;
-  padding: 1rem 1rem 1rem 0;
-  color: ${({ theme }) => theme.colors.txt};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+const ToggleBox = styled.div`
+  label {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 1.5rem;
+    border-radius: 2rem;
+    overflow: hidden;
+    transition: all 1s;
+  }
 
-  div {
-    flex: 1;
-    text-align: left;
+  input::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
   }
-  .fit {
-    flex-basis: fit-content;
-    text-align: center;
+  input:checked::before {
+    background-color: ${({ theme }) => theme.colors.pointBlue};
   }
-  .right {
-    text-align: right;
+  input::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.3rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: left 0.2s linear;
   }
-  .center {
-    text-align: center;
+  input:checked::after {
+    left: calc(100% - 1.4rem);
+  }
+  input:disabled {
+    opacity: 0.3;
   }
 `;
-const Table = styled.div``;
-const Head = styled.div`
-  ${Row} {
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.txtLigthGray};
-  }
-`;
-const Body = styled.div``;
 
 const objective: Objective = {
   WEBSITE_CONVERSIONS: "웹사이트 전환",
@@ -140,8 +155,9 @@ const Campaigns = () => {
       <Table>
         <Head>
           <Row>
-            <div className="status fit">상태</div>
-            <div className="id">아이디</div>
+            <div className="status">
+              <div>상태</div>
+            </div>
             <div className="name">캠페인명</div>
             <div className="objective">캠페인 목적</div>
             <div className="impressions right">노출수</div>
@@ -159,19 +175,20 @@ const Campaigns = () => {
             )
             .map((campaign) => (
               <Row key={campaign.id}>
-                <div className="status fit">
-                  <label htmlFor="status">
-                    <input
-                      onChange={() => onStatusChange(campaign.id)}
-                      type="checkbox"
-                      name="status"
-                      id="status"
-                      checked={campaign.enabled}
-                      disabled={viewer === "viewer"}
-                    />
-                  </label>
+                <div className="status">
+                  <ToggleBox>
+                    <label htmlFor="status">
+                      <input
+                        onChange={() => onStatusChange(campaign.id)}
+                        type="checkbox"
+                        name="status"
+                        id="status"
+                        checked={campaign.enabled}
+                        disabled={viewer === "viewer"}
+                      />
+                    </label>
+                  </ToggleBox>
                 </div>
-                <div className="name">{campaign.id}</div>
                 <div className="name">{campaign.name}</div>
                 <div className="objective">
                   {objective[campaign.campaign_objective as ObjectiveType]}

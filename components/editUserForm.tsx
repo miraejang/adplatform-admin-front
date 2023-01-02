@@ -1,7 +1,7 @@
 import React from "react";
-import { FieldErrors, useForm } from "react-hook-form";
-import styled from "styled-components";
+import { useForm } from "react-hook-form";
 import { BlueBtn, GrayBtn } from "../styles/buttons";
+import { Form, CloseBtn, ErorrMessage, BtnBox } from "../styles/form";
 import Modal from "./modal";
 
 type User = {
@@ -14,37 +14,36 @@ interface Iprops {
   onClose: () => void;
 }
 
-const Form = styled.form`
-  margin-top: 1rem;
-`;
-const BtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const EditUserForm = ({ userData, onClose }: Iprops) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<User>({ mode: "onBlur" });
-  const onValid = (data: User) => {};
-  const OnInvalid = (errors: FieldErrors) => {};
+  const onValid = ({ name }: User) => {
+    console.log({ ...userData, name });
+    onClose();
+  };
 
   return (
-    <Modal onClose={onClose}>
-      <button onClick={onClose}>
-        <p>닫기</p>
-      </button>
+    <Modal>
+      <CloseBtn onClick={onClose}>
+        <span>닫기</span>
+      </CloseBtn>
       <h2>사용자 수정</h2>
-      <Form onSubmit={handleSubmit(onValid, OnInvalid)}>
+      <Form onSubmit={handleSubmit(onValid)}>
         <div>
-          <p>아이디</p>
-          <p>{userData.email}</p>
+          <div className="labelStyleBox required">
+            <span>아이디</span>
+          </div>
+          <div className="inputStyleBox">
+            <p>{userData.email}</p>
+          </div>
         </div>
         <div>
-          <label htmlFor="name">이름</label>
+          <label htmlFor="name" className="required">
+            <span>이름</span>
+          </label>
           <input
             defaultValue={userData.name}
             {...register("name", {
@@ -59,7 +58,7 @@ const EditUserForm = ({ userData, onClose }: Iprops) => {
             name="name"
             id="name"
           />
-          {errors.name?.message}
+          {errors.name && <ErorrMessage>{errors.name.message}</ErorrMessage>}
         </div>
         <BtnBox>
           <GrayBtn onClick={onClose}>취소</GrayBtn>

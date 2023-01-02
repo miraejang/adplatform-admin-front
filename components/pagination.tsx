@@ -22,7 +22,7 @@ const ArrowBtn = styled(Btn)`
   position: relative;
   font-size: 1.3rem;
 
-  p {
+  span {
     position: absolute;
     overflow: hidden;
     height: 1px;
@@ -114,10 +114,10 @@ const Pagination = ({
   return (
     <PAGINATION>
       <First onClick={() => onClick(1)}>
-        <p>첫 페이지</p>
+        <span>첫 페이지</span>
       </First>
       <Prev onClick={() => onClick(current - 1)}>
-        <p>이전 페이지</p>
+        <span>이전 페이지</span>
       </Prev>
       <Pages>
         {currentPages.map((page) => (
@@ -127,10 +127,10 @@ const Pagination = ({
         ))}
       </Pages>
       <Next onClick={() => onClick(current + 1)}>
-        <p>다음 페이지</p>
+        <span>다음 페이지</span>
       </Next>
       <Last onClick={() => onClick(total)}>
-        <p>마지막 페이지</p>
+        <span>마지막 페이지</span>
       </Last>
     </PAGINATION>
   );

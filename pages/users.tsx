@@ -3,8 +3,8 @@ import styled from "styled-components";
 import CreateUserForm from "../components/createUserForm";
 import EditUserForm from "../components/editUserForm";
 import Pagination from "../components/pagination";
-import viewerMode from "../components/states";
 import { BlueBtn } from "../styles/buttons";
+import { Body, Head, Row, Table } from "../styles/table";
 
 const sampleData = {
   content: [
@@ -39,35 +39,6 @@ type User = {
   last_login_at: string;
 };
 
-const Row = styled.div`
-  display: flex;
-  padding: 1rem;
-  color: ${({ theme }) => theme.colors.txt};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
-
-  div {
-    flex: 1;
-    text-align: left;
-  }
-  .fit {
-    flex: 0 0 fit-content;
-    text-align: center;
-  }
-  .right {
-    text-align: right;
-  }
-  .center {
-    text-align: center;
-  }
-`;
-const Table = styled.div``;
-const Head = styled.div`
-  ${Row} {
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.txtLigthGray};
-  }
-`;
-const Body = styled.div``;
 const BtnUserCreat = styled(BlueBtn)`
   margin: 1rem 2rem 1.5rem;
 `;
@@ -134,7 +105,6 @@ const Users = () => {
           ))}
         </Body>
       </Table>
-
       <Pagination
         total={sampleData.total_pages}
         current={currentPage}

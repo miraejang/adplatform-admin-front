@@ -4,6 +4,7 @@ import styled, { ThemeProvider } from "styled-components";
 import GlobalStyle from "../styles/globalstyles";
 import theme from "../styles/theme";
 import { RecoilRoot } from "recoil";
+import ErrorBoundary from "../components/errorBoundary";
 
 const Main = styled.main`
   padding: 2rem 1rem;
@@ -16,7 +17,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <GlobalStyle />
         <Header />
         <Main>
-          <Component {...pageProps} />
+          <ErrorBoundary>
+            <Component {...pageProps} />
+          </ErrorBoundary>
         </Main>
       </ThemeProvider>
     </RecoilRoot>

@@ -2,10 +2,6 @@ import { PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
-interface ModalProps {
-  onClose: () => void;
-}
-
 const MODAL = styled.div`
   display: flex;
   justify-content: center;
@@ -18,8 +14,8 @@ const MODAL = styled.div`
   background-color: ${({ theme }) => theme.colors.tintBlack};
 `;
 const Content = styled.div`
+  position: relative;
   width: 50rem;
-  height: 50rem;
   padding: 2rem;
   border-radius: 0.5rem;
   background-color: #fff;
@@ -34,7 +30,7 @@ const ModalOverlay = ({ children }: PropsWithChildren) => {
   );
 };
 
-const Modal = (props: PropsWithChildren<ModalProps>) => {
+const Modal = (props: PropsWithChildren) => {
   const selectedElement = document.getElementById("modal") as HTMLElement;
 
   return (
